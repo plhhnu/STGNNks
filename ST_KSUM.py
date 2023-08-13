@@ -360,6 +360,27 @@ def STGNNks_on_ST(args):
         pd.DataFrame(np.hstack(pred_list))
         df = pd.DataFrame(np.hstack(pred_list))
         df.to_csv(f"./500.csv")
+        # 空间可变基因
+        adata =  sc.read_visium("./Adult Mouse Brain (FFPE)")
+        counts = pd.DataFrame(adata.X.todense(), columns=adata.var_names, index=adata.obs_names)
+        coord = pd.DataFrame(adata.obsm['spatial'], columns=['x_coord', 'y_coord'], index=adata.obs_names)
+        results = SpatialDE.run(coord, counts)
+        results.index = results["g"]
+        df_data = pd.DataFrame(adata.var)
+        search_list = results.index.tolist()
+        data_list = []
+        for col_name in search_list:
+            data_list.append(df_data.loc[col_name, :])
+        df = pd.DataFrame(data_list)
+        results = pd.DataFrame(results)
+        results.to_csv(f"./results.csv")
+        adata.var = pd.concat([adata.var, results.loc[df.index.values, :]], axis=1)
+        adata.var.to_csv(f"./adata.var.csv")
+        df_results = results.sort_values("qval").head(10)
+        df_results.to_csv(f"./results.sort_values.csv")
+        sc.pl.spatial(adata, img_key="hires", color=["COL1A2", "SYPL1"], alpha=0.7)
+        plt.savefig(f"./spatial.jpg")
+        result_fp.close()
 
 
 
