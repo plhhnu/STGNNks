@@ -310,7 +310,7 @@ def STGNNks_on_ST(args):
                            )
         input_size = datas.n_vars
         result_fp = open("./result_matric.csv", mode="w")
-        c_true=10
+        c_true=20
         pred_list = []
         Encode = model(dims=[input_size, 200, 100,20], n_clusters=c_true, noise_sd=2.5)
         y = datas.raw.X
