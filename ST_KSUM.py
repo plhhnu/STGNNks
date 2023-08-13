@@ -323,7 +323,7 @@ def STGNNks_on_ST(args):
 
         df = pd.DataFrame(X_embedding)
         df = df.fillna(0)
-
+        df.to_csv(f'./embedding matrix.csv')
         print("-----------Clustering-------------")
 
         # result_fp.write("knn_{},c_true, dav, cal, sil,sdbw\n".format(knn))
@@ -355,6 +355,9 @@ def STGNNks_on_ST(args):
             all_data.append([index, y_pred[index]])
         np.savetxt(f"‘./types.txt", np.array(all_data),fmt='%3d', delimiter='\t')
         pd.DataFrame(np.hstack(pred_list))
+        df = pd.DataFrame(np.hstack(pred_list))
+        df.to_csv(f"./500.csv")
+
 
 
 
