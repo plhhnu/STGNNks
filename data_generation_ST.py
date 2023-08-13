@@ -65,7 +65,7 @@ def get_adj(generated_data_fold):
     import pickle
     import scipy.linalg
 
-    for threshold in [500]:#range (210,211):#(100,400,40):
+    for threshold in [500]:#300,800
         num_big = np.where(distance_array<threshold)[0].shape[0]
         print (threshold,num_big,str(num_big/(cell_num*2))) #300 22064 2.9046866771985256
         from sklearn.metrics.pairwise import euclidean_distances
@@ -95,14 +95,9 @@ def main(args):
     if not os.path.exists(generated_data_fold):
         os.makedirs(generated_data_fold)
     adata_h5 = st.Read10X(path=data_fold, count_file=args.data_name+'_filtered_feature_bc_matrix.h5' )
-    print(adata_h5)
-    # add ground_truth
-    Ann_df = pd.read_csv(data_fold+'/metadata.tsv', sep='\t')
-    df_meta_layer = Ann_df['layer_guess']
-    adata_h5.obs['ground_truth'] = df_meta_layer.values
-    # filter out NA nodes
-    adata_h5= adata_h5[~pd.isnull(adata_h5.obs['ground_truth'])]
+
     features = adata_preprocess(adata_h5, min_cells=args.min_cells, pca_n_comps=args.Dim_PCA)
+    print("features:",features )
     gene_ids = adata_h5.var['gene_ids']
     coordinates = adata_h5.obsm['spatial']
 
@@ -118,8 +113,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument( '--min_cells', type=float, default=5, help='Lowly expressed genes which appear in fewer than this number of cells will be filtered out')
     parser.add_argument( '--Dim_PCA', type=int, default=200, help='The output dimention of PCA')
-    parser.add_argument('--data_path', type=str, default='10xdata/Human Lymph Node', help='The name of dataset')
-    parser.add_argument('--data_name', type=str, default='Human Lymph Node',help='The name of dataset')
+    parser.add_argument('--data_path', type=str, default='10xdata/Adult Mouse Brain (FFPE)', help='The name of dataset')
+    parser.add_argument('--data_name', type=str, default='Adult Mouse Brain',help='The name of dataset')
     parser.add_argument( '--generated_data_path', type=str, default='generated_data/', help='The folder to store the generated data')
     args = parser.parse_args() 
 
