@@ -347,8 +347,11 @@ def STGNNks_on_ST(args):
         # Ann_df = pd.read_csv('./metadata.tsv', sep='\t')
         # ARI = np.round(metrics.adjusted_rand_score(y_pred, Ann_df['fine_annot_type']), 3)
         # NMI = np.round(metrics.normalized_mutual_info_score(y_pred, Ann_df['fine_annot_type']), 3)
-
-
+        print("dav:", dav)
+        print("cal:", cal)
+        print("sil:", sil)
+        print("sdbw:", sdbw)
+        
         all_data = []  # txt: cell_id, cell batch, cluster type
 
         for index in range(num_cell):
